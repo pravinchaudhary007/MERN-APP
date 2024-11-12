@@ -1,7 +1,15 @@
 import { NavLink } from "react-router-dom";
 import image from "../../../assets/square.jpg";
+import axios from "axios"
 
 const Register = () => {
+
+    
+  const HendlerRegister = async () =>{
+    const server = await axios() 
+  }
+
+
   return (
     <section
       style={{ backgroundImage: `url(${image})` }}
