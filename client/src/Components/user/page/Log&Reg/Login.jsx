@@ -1,31 +1,14 @@
 import { NavLink } from "react-router-dom";
 import image from "../../../../assets/square.jpg";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { useState } from "react";
+
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 const Login = () => {
-  const [Login, setLogin] = useState({
-    userid: "",
-    loginpass: "",
-  });
 
-  const hendlelogin = async (e) => {
-    e.preventDefault();
-    try {
-      const logindata = await axios.post("http://localhost:5000/login", Login);
-      if (logindata.data) {
-        toast.success(logindata.data);
-      }
-    } catch (error) {
-      toast.error(error.response?.data || "Login failed!");
-    }
-  };
+  const { hendlelogin, submithendle } = useContext(UserContext);
 
-  const submithendle = (e) => {
-    const { name, value } = e.target;
-    setLogin({ ...Login, [name]: value });
-  };
 
   return (
     <>
@@ -46,6 +29,7 @@ const Login = () => {
                   type="text"
                   name="userid"
                   onChange={submithendle}
+                  autoComplete="off"
                   className="border-b tracking-wider focus:bg-transparent bg-transparent px-2 py-1 active:border-b focus:border-orange-500 border-white outline-none w-full"
                   required={true}
                 />
@@ -57,6 +41,7 @@ const Login = () => {
                 <input
                   type="password"
                   name="loginpass"
+                  autoComplete="off"
                   onChange={submithendle}
                   className="border-b px-2 py-1 focus:bg-transparent bg-transparent active:border-b border-white   focus:border-orange-500  outline-none w-full"
                   required={true}

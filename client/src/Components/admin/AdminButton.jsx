@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { NavLink } from 'react-router-dom';
 
-const Button = ({ name }) => {
+const AdminButton = ({ name }) => {
   return (
     <NavLink
-      to={`/${name.toLowerCase()}`}
+      to={`/admin/${name.toLowerCase()}`}
       className={({ isActive }) =>
         isActive ? "bg-white  px-3 py-1 rounded-sm" : "bg-black text-white px-3 py-1 rounded-sm"
       }
@@ -14,4 +14,6 @@ const Button = ({ name }) => {
   );
 }
 
-export default Button;
+export default AdminButton;
+
+

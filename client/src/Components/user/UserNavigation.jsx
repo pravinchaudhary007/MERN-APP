@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
-import Button from "./page/Log&Reg/Button";
+import globle from '../../assets/globle.jpg'
+import Button from "./Button";
+
 
 const UserNavigation = () => {
 
@@ -12,9 +14,10 @@ const UserNavigation = () => {
 
   return (
     <>
-      <ul className="flex select-none justify-between items-center  px-14 py-4 border-b border-black bg-orange-400">
-        <li>
-          <h1 className="text-2xl font-bold">LOGO</h1>
+      <ul className="flex shadow-lg drop-shadow-lg select-none justify-between items-center  px-14 py-2 border-b  bg-orange-400">
+        <li className="flex justify-center items-center gap-3">
+          <img  src={globle} className="h-12 w-12 rounded-full border border-black drop-shadow-lg shadow-lg" alt="User Logo image"/>
+          <h1 className="text-2xl font-bold ">UserName</h1>
         </li>
         <li>
           <ul className="flex  justify-center items-center text-sm gap-3">

@@ -1,8 +1,12 @@
-
+import globle from "../../assets/mobileapp.jpg";
 const AdminHome = () => {
   return (
-    <div>AdminHome</div>
-  )
-}
+    <>
+     <main style={{backgroundImage: `url(${globle})`}} className="h-screen bg-cover bg-no-repeat bg-center  ">
 
-export default AdminHome
+     </main>
+    </>
+  );
+};
+
+export default AdminHome;

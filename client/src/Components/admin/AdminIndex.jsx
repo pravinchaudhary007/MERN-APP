@@ -1,8 +1,12 @@
-
+import { Outlet } from "react-router-dom";
+import DashBoard from "./DashBoard";
 const AdminIndex = () => {
   return (
-    <div>AdminIndex</div>
-  )
-}
+    <>
+      <DashBoard />
+      <Outlet />
+    </>
+  );
+};
 
-export default AdminIndex
+export default AdminIndex;
