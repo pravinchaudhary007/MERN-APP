@@ -10,3 +10,7 @@ body, html {
     display: none; 
   }
   
+  html,
+:host {
+    -webkit-text-size-adjust: 100%;
+}

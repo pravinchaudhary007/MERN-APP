@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import Button from "./page/Button";
+import Button from "./page/Log&Reg/Button";
 
 const UserNavigation = () => {
 
@@ -12,17 +12,17 @@ const UserNavigation = () => {
 
   return (
     <>
-      <ul className="flex select-auto justify-between items-center px-14 py-4 border-b border-black bg-orange-400">
+      <ul className="flex select-none justify-between items-center  px-14 py-4 border-b border-black bg-orange-400">
         <li>
           <h1 className="text-2xl font-bold">LOGO</h1>
         </li>
         <li>
-          <ul className="flex justify-center items-center text-sm gap-3">
+          <ul className="flex  justify-center items-center text-sm gap-3">
             {Links.map((link, index) => (
               <li key={index}>
                 <NavLink
                   to={path(link)} 
-                  className={({ isActive }) => (isActive ? "underline text-white" : "text-black hover:underline")}
+                  className={({ isActive }) => (isActive ? "underline  text-white" : "text-black hover:underline")}
                 >
                   {link}
                 </NavLink>

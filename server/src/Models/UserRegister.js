@@ -1,8 +1,13 @@
 import { Schema, model } from "mongoose";
 
-const UserSchema = Schema(
+const UserRegisterSchema = Schema(
   {
     username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    phonenumber: {
       type: String,
       required: true,
       unique: true,
@@ -16,14 +21,11 @@ const UserSchema = Schema(
       type: String,     // bcreypt hash form in encoded
       required: true,
       unique: true,
-    },
-    cmfmpassword: {
-      type: String,
-    },
+    }
   },
   { timestamps: true }
 );
 
-const UserModle = model("User", UserSchema);
+const UserRegisterModle = model("RegisterUser", UserRegisterSchema);
 
-export default UserModle;
+export default UserRegisterModle;

@@ -1,12 +1,16 @@
 import { connect } from "mongoose";
 import { DB_NAME } from "./../Constansts.js";
 
+
 const Database = async (URI) => {
   try {
     const DB = await connect(`${URI}/${DB_NAME}`);
-    console.log(`📂  Database Connected... At Host : ${DB.connection.host}`);
+    console.log(
+      `📂  Database Connected... Host    : ${DB.connection.host}
+📝  Database Storage..... Name    : ${DB_NAME}`
+    );
   } catch (error) {
-    console.log("Database Connection Error :", error.message);
+    console.error("Database Connection Error:", error.message);
     process.exit(1);
   }
 };

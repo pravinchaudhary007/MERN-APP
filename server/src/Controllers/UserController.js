@@ -1,56 +1,123 @@
-import UserModle from "../Models/UserModel.js";
+import UserRegisterModel from "../Models/UserRegister.js";
+import UserLoginModel from "../Models/UserLogin.js";
+import bcrypt from "bcrypt";
 
 export const UserRegister = async (req, res) => {
   try {
-    const { username, email, password, cmfmpass } = req.body;
-
-    if (!username || !email || !password || !cmfmpass) {
-      return res.status(400).send("Please fill All Filed...?");
-    }
+    const { username, phonenumber, email, password, cmfmpass } = req.body;
 
     if (username.length < 5) {
-      return res.status(400).send("Please username at list 5 charaters ?... ");
+      return res.status(400).send("Username must be at least 5 characters.");
     }
+
+    if (phonenumber.length !== 10) {
+      return res.status(400).send("Phone number must be exactly 10 digits.");
+    }
+
+    if (email.length == 0) {
+      return res.status(400).send("Please enter email.");
+    }
+
+    if (password.length === 0 || cmfmpass.length === 0) {
+      return res.status(400).send("Please enter password.");
+    }
+
     if (password.length < 4 || cmfmpass.length < 4) {
-      return res
-        .status(400)
-        .send("Please password at list 4 charaters or number ?... ");
+      return res.status(400).send("Password must be at least 4 characters.");
     }
-    const existuser = await UserModle.findOne({$or : [{username} , {email}]});
-    
-     if (existuser) {
-      return res.status(400).send(`${existuser.username === username ? username : email} to already Account registered.`);
-    }
+
     if (password !== cmfmpass) {
       return res.status(400).send("Password and confirm password do not match.");
     }
 
-    await UserModle({ username, email, password }).save();
-    res.status(200).send(` ${username} is register Successfully... ✨🎉`);
+    const cleanPhonenumber = phonenumber.replace(/\D/g, "").trim();
+    const existuser = await UserRegisterModel.findOne({
+      $or: [{ username }, { phonenumber: cleanPhonenumber }, { email }],
+    });
+
+    if (existuser) {
+      if (existuser.username === username) {
+        return res.status(400).send(`${username} is already registered.`);
+      } else if (String(existuser.phonenumber) === cleanPhonenumber) {
+        return res.status(400).send(`${phonenumber} is already registered.`);
+      } else if (existuser.email === email) {
+        return res.status(400).send(`${email} is already registered.`);
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await UserRegisterModel.create({
+      username,
+      phonenumber,
+      email,
+      password: hashedPassword,
+    });
+
+    res.status(200).send(`${username} is registered successfully 🎉`);
   } catch (error) {
     res.status(500).send(error.message);
   }
-}; // Add User Register
+};  //  User Register
+export const UserLogin = async (req, res) => {
+  const { userid, loginpass } = req.body;
+  try {
+    if (!userid || !loginpass) {
+      return res.status(400).send("Please enter both username/email/phone and password.");
+    }
+    let cleanUserid = userid;
+    if (/^\d+$/.test(userid)) {  
+      cleanUserid = userid.replace(/\D/g, '').trim();
+    }
+
+    const user = await UserRegisterModel.findOne({
+      $or: [
+        { username: cleanUserid },
+        { email: cleanUserid },
+        { phonenumber: cleanUserid },
+      ],
+    });
+
+    if (!user) {
+      return res.status(400).send(`${userid} is not registered.`);
+    }
+
+    const isPasswordMatch = await bcrypt.compare(loginpass, user.password);
+    if (!isPasswordMatch) {
+      return res.status(400).send("Incorrect password.");
+    }
+
+    const hashedloginpass = await bcrypt.hash(loginpass, 10);
+    await UserLoginModel.create({
+      userid: user.username, 
+      loginpass: hashedloginpass,
+    });
+
+    // Success response
+    res.status(200).send(`${user.username} logged in successfully 🎉`);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};  //  User Login
+
 
 export const DeleteUser = async (req, res) => {
-  const { username, email } = req.body;
+  const { username, phonenumber, email } = req.body;
+
   try {
-    if (!username && !email) {
-      return res.status(400).send("Please enter username or email ?...");
+    if (!username && !email && !phonenumber) {
+      return res.status(400).send("Please provide username, email, or phone number.");
     }
-    const remove = await UserModle.deleteOne({
-      $or: [{ username }, { email }],
+
+    const remove = await UserRegisterModel.deleteOne({
+      $or: [{ username }, { email }, { phonenumber }],
     });
 
     if (remove.deletedCount === 1) {
-      return res
-        .status(200)
-        .send(`${username || email} Delete Successfully... !`);
+      return res.status(200).send(`${username || email || phonenumber} deleted successfully!`);
     }
-    return res.status(404).send("User not Found ?...");
+
+    return res.status(404).send("User not found.");
   } catch (error) {
     res.status(500).send(error.message);
   }
-}; // Delete User
-
-
+};   // User Delete

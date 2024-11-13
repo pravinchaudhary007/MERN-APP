@@ -7,7 +7,7 @@ const MainRouter = () => {
     localStorage.setItem("activePath", path); 
   };
 
-  const storedActivePath = localStorage.getItem("activePath") || location.pathname;
+  const storedActivePath = localStorage.getItem("activePath") || location.pathname || 0;
 
   const isActive = (path) => {
     return storedActivePath === path;
