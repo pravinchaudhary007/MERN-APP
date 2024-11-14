@@ -2,13 +2,13 @@ import { NavLink } from "react-router-dom";
 import image from "../../../../assets/square.jpg";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { useContext } from "react";
+import { FaRegEye } from "react-icons/fa6";
+import { FaRegEyeSlash } from "react-icons/fa6";
+import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 const Login = () => {
-
   const { hendlelogin, submithendle } = useContext(UserContext);
-
+  const [eye,seteye] = useState(false)
 
   return (
     <>
@@ -30,7 +30,7 @@ const Login = () => {
                   name="userid"
                   onChange={submithendle}
                   autoComplete="off"
-                  className="border-b tracking-wider focus:bg-transparent bg-transparent px-2 py-1 active:border-b focus:border-orange-500 border-white outline-none w-full"
+                  className="border-b tracking-wider text-black  bg-white caret-black px-2 py-1 active:border-b focus:border-orange-500 border-white outline-none w-full"
                   required={true}
                 />
               </label>
@@ -39,15 +39,23 @@ const Login = () => {
               <label htmlFor="password" className="block mb-2">
                 Password
                 <input
-                  type="password"
+                  type={`${eye === true ? "text" : "password"}`}
                   name="loginpass"
                   autoComplete="off"
                   onChange={submithendle}
-                  className="border-b px-2 py-1 focus:bg-transparent bg-transparent active:border-b border-white   focus:border-orange-500  outline-none w-full"
+                  className="border-b px-2 text-black relative py-1 caret-black  bg-white active:border-b border-white   focus:border-orange-500  outline-none w-full"
                   required={true}
                 />
+                <div onClick={() => seteye(!eye)} className={`absolute cursor-pointer ${eye === false ? "hidden" : "block"} right-8 text-black  bottom-[39%]`}>
+                  <FaRegEye className="h-4 w-4" />
+                </div>
+                <div onClick={() => seteye(!eye)} className={`absolute cursor-pointer ${eye === true ? "hidden" : "block"} right-8 text-black  bottom-[39%]`}>
+                  <FaRegEyeSlash className="h-4 w-4" />
+                </div>
+
               </label>
             </div>
+
             <div className="flex justify-between mx-4 items-center">
               <button
                 type="reset"

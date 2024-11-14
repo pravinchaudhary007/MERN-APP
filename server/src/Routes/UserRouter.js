@@ -1,10 +1,16 @@
 import { Router } from "express";
-import { UserRegister ,DeleteUser, UserLogin} from "../Controllers/UserController.js";
+import { UserRegister ,RegUserDelete,
+         UserLogin,RegisterdUser,LoginUser,
+         LogUserDelete,UserUpadate} from "../Controllers/UserController.js";
 
 const UserRouter = Router();
 
 UserRouter.route('/register').post(UserRegister)
 UserRouter.route('/login').post(UserLogin)
-UserRouter.route('/delete').post(DeleteUser)
+UserRouter.route('/reguserdelete').post(RegUserDelete)
+UserRouter.route('/loguserdelete').post(LogUserDelete)
+UserRouter.route('/allregistreduser').get(RegisterdUser)
+UserRouter.route('/allloginuser').get(LoginUser)
+UserRouter.route('/UpadateUser').put(UserUpadate)
 
 export default UserRouter

@@ -16,7 +16,7 @@ const Server = async (URI) => {
     await Database(URI);
     app.listen(Port, () => {
       console.log(`📡  Server is Running.... At Port : ${Port}`);
-      console.log("📺  http://localhost:5000");
+      console.log("📺  http://localhost:5000/register");
     });
   } catch (error) {
     console.log("Server/DB Connection Error...: ", error);

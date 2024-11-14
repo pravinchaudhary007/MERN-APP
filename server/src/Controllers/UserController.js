@@ -27,7 +27,9 @@ export const UserRegister = async (req, res) => {
     }
 
     if (password !== cmfmpass) {
-      return res.status(400).send("Password and confirm password do not match.");
+      return res
+        .status(400)
+        .send("Password and confirm password do not match.");
     }
 
     const cleanPhonenumber = phonenumber.replace(/\D/g, "").trim();
@@ -57,7 +59,7 @@ export const UserRegister = async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-};  //  User Register
+}; //  User Register POST
 export const UserLogin = async (req, res) => {
   const { userid, loginpass } = req.body;
   try {
@@ -65,10 +67,9 @@ export const UserLogin = async (req, res) => {
       return res.status(400).send("Please enter both username/email/phone and password.");
     }
     let cleanUserid = userid;
-    if (/^\d+$/.test(userid)) {  
-      cleanUserid = userid.replace(/\D/g, '').trim();
+    if (/^\d+$/.test(userid)) {
+      cleanUserid = userid.replace(/\D/g, "").trim();
     }
-
     const user = await UserRegisterModel.findOne({
       $or: [
         { username: cleanUserid },
@@ -76,36 +77,37 @@ export const UserLogin = async (req, res) => {
         { phonenumber: cleanUserid },
       ],
     });
-
     if (!user) {
       return res.status(400).send(`${userid} is not registered.`);
     }
+    const userExist = await UserLoginModel.find({ userid: user.username });
 
+    if (userExist.length > 0) {
+      return res.status(400).send(`${user.username} is already logged in on another device.`);
+    }
     const isPasswordMatch = await bcrypt.compare(loginpass, user.password);
     if (!isPasswordMatch) {
       return res.status(400).send("Incorrect password.");
     }
-
-    const hashedloginpass = await bcrypt.hash(loginpass, 10);
+    const hashedLoginPass = await bcrypt.hash(loginpass, 10);
     await UserLoginModel.create({
-      userid: user.username, 
-      loginpass: hashedloginpass,
+      userid: user.username,
+      loginpass: hashedLoginPass,
     });
-
-    // Success response
     res.status(200).send(`${user.username} logged in successfully 🎉`);
   } catch (error) {
     res.status(500).send(error.message);
   }
-};  //  User Login
+}; //  User Login POST
 
-
-export const DeleteUser = async (req, res) => {
+export const RegUserDelete = async (req, res) => {
   const { username, phonenumber, email } = req.body;
 
   try {
     if (!username && !email && !phonenumber) {
-      return res.status(400).send("Please provide username, email, or phone number.");
+      return res
+        .status(400)
+        .send("Please provide username, email, or phone number.");
     }
 
     const remove = await UserRegisterModel.deleteOne({
@@ -113,11 +115,73 @@ export const DeleteUser = async (req, res) => {
     });
 
     if (remove.deletedCount === 1) {
-      return res.status(200).send(`${username || email || phonenumber} deleted successfully!`);
+      return res
+        .status(200)
+        .send(
+          `${
+            username || email || phonenumber
+          } Register to deleted successfully!`
+        );
     }
 
-    return res.status(404).send("User not found.");
+    return res.status(404).send("Register User not found. ?");
   } catch (error) {
     res.status(500).send(error.message);
   }
-};   // User Delete
+}; // User Register Delete POST
+
+export const LogUserDelete = async (req, res) => {
+  const { username, phonenumber, email } = req.body;
+
+  try {
+    if (!username && !email && !phonenumber) {
+      return res
+        .status(400)
+        .send("Please provide username, email, or phone number.");
+    }
+
+    const remove = await UserLoginModel.deleteOne({
+      $or: [{ username }, { email }, { phonenumber }],
+    });
+
+    if (remove.deletedCount === 1) {
+      return res
+        .status(200)
+        .send(
+          `${username || email || phonenumber} Login deleted successfully!`
+        );
+    }
+
+    res.status(404).send("Login User not found.");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}; // User Login Delete POST
+
+export const RegisterdUser = async (req, res) => {
+  try {
+    const RegisterUsers = await UserRegisterModel.find();
+    if (RegisterUsers.length == 0) {
+      return res.status(400).send("Not User Regiatered available ?");
+    }
+    res.status(200).send(RegisterUsers);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}; // User Register GET
+
+export const LoginUser = async (req, res) => {
+  try {
+    const loginusers = await UserLoginModel.find();
+    if (loginusers.length == 0) {
+      return res.status(400).send("Not Users Login Available ?");
+    }
+    res.status(200).send(loginusers);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}; // User login GET
+
+export const UserUpadate = async(req , res) =>{
+      
+}
